@@ -2,32 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Fourier Image Compressor</title>
+  <title>FFT Image Compressor</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <h1>Image Compressor using Fourier Transform</h1>
-  <p>Frequency-domain image compression using Discrete Fourier Transform</p>
+<h1>Image Compressor using FFT</h1>
+<p>
+  Frequency-domain image compression using Fast Fourier Transform (FFT).
+  Images are resized automatically for performance.
+</p>
 
-  <input type="file" id="upload" accept="image/*" />
+<input type="file" id="upload" accept="image/*" />
 
-  <div class="controls">
-    <label>Compression Level</label>
-    <input type="range" id="threshold" min="1" max="50" value="10" />
-  </div>
+<div class="controls">
+  <label>Compression Level</label>
+  <input type="range" id="threshold" min="5" max="60" value="20" />
+</div>
 
-  <div class="canvas-container">
-    <div>
-      <h3>Original Image</h3>
-      <canvas id="original"></canvas>
-    </div>
-    <div>
-      <h3>Compressed Image</h3>
-      <canvas id="compressed"></canvas>
-    </div>
-  </div>
+<div class="canvas-container">
+  <canvas id="original"></canvas>
+  <canvas id="compressed"></canvas>
+</div>
 
-  <script src="script.js"></script>
+<script src="fft.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
