@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fourier Image Compressor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1>Image Compressor using Fourier Transform</h1>
+  <p>Frequency-domain image compression using Discrete Fourier Transform</p>
+
+  <input type="file" id="upload" accept="image/*" />
+
+  <div class="controls">
+    <label>Compression Level</label>
+    <input type="range" id="threshold" min="1" max="50" value="10" />
+  </div>
+
+  <div class="canvas-container">
+    <div>
+      <h3>Original Image</h3>
+      <canvas id="original"></canvas>
+    </div>
+    <div>
+      <h3>Compressed Image</h3>
+      <canvas id="compressed"></canvas>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
