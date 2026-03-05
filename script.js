@@ -1,45 +1,133 @@
-const MAX_SIZE = 128;
-
 const upload = document.getElementById("upload");
-const slider = document.getElementById("threshold");
+const compression = document.getElementById("compression");
 
-const oCanvas = document.getElementById("original");
-const cCanvas = document.getElementById("compressed");
+const originalCanvas = document.getElementById("original");
+const compressedCanvas = document.getElementById("compressed");
 
-const octx = oCanvas.getContext("2d");
-const cctx = cCanvas.getContext("2d");
+const octx = originalCanvas.getContext("2d");
+const cctx = compressedCanvas.getContext("2d");
 
-let width, height, imageData;
+const SIZE = 256;
 
 upload.addEventListener("change", loadImage);
-slider.addEventListener("input", processImage);
+compression.addEventListener("input", processImage);
 
-function loadImage(e) {
-  const img = new Image();
-  img.onload = () => {
-    const scale = Math.min(MAX_SIZE / img.width, MAX_SIZE / img.height, 1);
-    width = Math.floor(img.width * scale);
-    height = Math.floor(img.height * scale);
+let imgData;
 
-    oCanvas.width = cCanvas.width = width;
-    oCanvas.height = cCanvas.height = height;
+function loadImage(e){
 
-    octx.drawImage(img, 0, 0, width, height);
-    imageData = octx.getImageData(0, 0, width, height);
-    processImage();
-  };
-  img.src = URL.createObjectURL(e.target.files[0]);
+const file = e.target.files[0];
+const reader = new FileReader();
+
+reader.onload = function(event){
+
+const img = new Image();
+
+img.onload = function(){
+
+originalCanvas.width = SIZE;
+originalCanvas.height = SIZE;
+
+compressedCanvas.width = SIZE;
+compressedCanvas.height = SIZE;
+
+octx.drawImage(img,0,0,SIZE,SIZE);
+
+imgData = octx.getImageData(0,0,SIZE,SIZE);
+
+processImage();
+
 }
 
-function processImage() {
-  if (!imageData) return;
+img.src = event.target.result;
 
-  const gray = [];
-  for (let i = 0; i < imageData.data.length; i += 4) {
-    gray.push(imageData.data[i]);
-  }
+}
 
-  const freq = fft2D(gray, width, height);
+reader.readAsDataURL(file);
+
+}
+
+function processImage(){
+
+if(!imgData) return;
+
+let gray = [];
+
+for(let i=0;i<imgData.data.length;i+=4){
+
+let g = 0.299*imgData.data[i] + 0.587*imgData.data[i+1] + 0.114*imgData.data[i+2];
+
+gray.push(g);
+
+}
+
+let matrix = [];
+
+for(let i=0;i<SIZE;i++){
+
+matrix.push(gray.slice(i*SIZE,(i+1)*SIZE));
+
+}
+
+let fft = fft2D(matrix);
+
+let level = parseInt(compression.value);
+
+for(let i=0;i<SIZE;i++){
+
+for(let j=0;j<SIZE;j++){
+
+if(i>level && j>level){
+
+fft[i][j]=0;
+
+}
+
+}
+
+}
+
+let result = ifft2D(fft);
+
+let output = cctx.createImageData(SIZE,SIZE);
+
+for(let i=0;i<SIZE*SIZE;i++){
+
+let val = result[Math.floor(i/SIZE)][i%SIZE];
+
+output.data[i*4] = val;
+output.data[i*4+1] = val;
+output.data[i*4+2] = val;
+output.data[i*4+3] = 255;
+
+}
+
+cctx.putImageData(output,0,0);
+
+}
+
+function fft2D(matrix){
+
+return matrix;
+
+}
+
+function ifft2D(matrix){
+
+return matrix;
+
+}
+
+document.getElementById("download").onclick = function(){
+
+const link = document.createElement("a");
+
+link.download = "compressed.png";
+link.href = compressedCanvas.toDataURL();
+
+link.click();
+
+};
   applyThreshold(freq, slider.value);
   const spatial = ifft2D(freq, width, height);
 
