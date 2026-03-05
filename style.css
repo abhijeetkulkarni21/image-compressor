@@ -1,19 +1,15 @@
-body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  margin: 20px;
+body{
+font-family: Arial;
+text-align:center;
+margin:40px;
 }
 
-.controls {
-  margin: 15px 0;
+.container{
+display:flex;
+justify-content:center;
+gap:40px;
 }
 
-.canvas-container {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
-canvas {
-  border: 1px solid #999;
+canvas{
+border:1px solid black;
 }
