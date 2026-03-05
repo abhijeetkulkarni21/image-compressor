@@ -132,7 +132,6 @@ link.click();
   const spatial = ifft2D(freq, width, height);
 
   draw(spatial);
-}
 
 function fft2D(data, w, h) {
   const re = Array.from({ length: h }, (_, i) =>
